@@ -1,6 +1,11 @@
 class window.UrlBuilder
+  constructor: (url) ->
+    console.log "url: " + url
+
+    this.parseUrlFromString(url) if url
+
   parseHostAndPortFromUrl: ->
-    if match = this.matchAndRemove(/^([A-z\d-\.]+\.([A-z]+))(|:(\d+))/)
+    if match = this.matchAndRemove(/^([A-z\d-\.]+)(|:(\d+))($|\/)/)
       @host = match[1]
 
       if match[3]
@@ -13,8 +18,8 @@ class window.UrlBuilder
           @port = 80
 
   parsePathFromUrl: ->
-    if match = this.matchAndRemove(/^\/([^\?]+)/)
-      @path = match[1]
+    if match = this.matchAndRemove(/^([^\?]+)/)
+      @path = "/" + match[1]
     else
       @path = ""
 
@@ -32,7 +37,7 @@ class window.UrlBuilder
         if match = pair.match(/^(.+?)=(.+)$/)
           @queryParameters[match[1]] = match[2]
 
-  parseUrlAsString: (url) ->
+  parseUrlFromString: (url) ->
     @url = url
 
     this.parseProtocolFromUrl()
@@ -54,14 +59,14 @@ class window.UrlBuilder
 
     url
 
-  hasQueryParameter: (queryParameterName) ->
-    @queryParameters.hasOwnProperty(queryParameterName)
+  pathWithQueryParameters: ->
+    generatedPath = @path
 
-  hasQueryParameters: ->
-    if @queryParameters && Object.keys(@queryParameters).length > 0
-      true
-    else
-      false
+    if this.hasQueryParameters()
+      generatedPath += "?"
+      generatedPath += this.queryParametersAsString()
+
+    generatedPath
 
   matchAndRemove: (regex) ->
     if match = @url.match(regex)
@@ -69,6 +74,17 @@ class window.UrlBuilder
       return match
     else
       return false
+
+  # Returns true if any query parameters has been saved
+  hasQueryParameters: ->
+    if @queryParameters && Object.keys(@queryParameters).length > 0
+      true
+    else
+      false
+
+  # Returns a hash containing the query parameters
+  queryParameters: ->
+    @queryParameters
 
   queryParametersAsString: ->
     queryParametersString = ""
