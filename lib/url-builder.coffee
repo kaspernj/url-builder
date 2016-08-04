@@ -1,7 +1,5 @@
 class window.UrlBuilder
   constructor: (url) ->
-    console.log "url: " + url
-
     this.parseUrlFromString(url) if url
 
   parseHostAndPortFromUrl: ->
