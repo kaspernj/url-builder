@@ -21,8 +21,6 @@ class window.UrlBuilder
   parseProtocolFromUrl: ->
     if match = this.matchAndRemove(/^(.+?):\/\//)
       @protocol = match[1]
-    else
-      console.log("Couldnt find protocol from: " + url)
 
   parseQueryParametersFromUrl: ->
     @queryParameters = {}
@@ -34,8 +32,6 @@ class window.UrlBuilder
         if match = pair.match(/^(.+?)=(.+)$/)
           @queryParameters[match[1]] = match[2]
 
-    console.log("queryParametersInParseQueryParametersFromUrl: " + @queryParameters)
-
   parseUrlAsString: (url) ->
     @url = url
 
@@ -44,14 +40,7 @@ class window.UrlBuilder
     this.parsePathFromUrl()
     this.parseQueryParametersFromUrl()
 
-    console.log("queryParametersInParseUrlAsString: " + @queryParameters)
-    console.log("Rest of URL: " + @url)
-    console.log("FullURL: " + this.generateFullUrl())
-
   generateFullUrl: ->
-    console.log("queryParametersInGenerateFullUrl: " + @queryParameters)
-    console.log("protocolInGenerateFullUrl: " + @protocol)
-
     url = @protocol + "://" + @host
 
     if @portSpecified
@@ -59,15 +48,16 @@ class window.UrlBuilder
 
     url += "/" + @path
 
-    if hasQueryParameters()
+    if this.hasQueryParameters()
       url += "?"
-      url += queryParametersAsString()
+      url += this.queryParametersAsString()
 
     url
 
-  hasQueryParameters = ->
-    console.log("queryParametersInHasQueryParameters: " + @queryParameters)
+  hasQueryParameter: (queryParameterName) ->
+    @queryParameters.hasOwnProperty(queryParameterName)
 
+  hasQueryParameters: ->
     if @queryParameters && Object.keys(@queryParameters).length > 0
       true
     else
