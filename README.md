@@ -4,24 +4,24 @@
 
 Start by making a new object with any given URL
 
-```coffeescript
-urlb = new UrlBuilder.new(window.location.href)
+```js
+var urlb = new UrlBuilder.new(window.location.href)
 ```
 
 ### Manipulate a query parameter
 
-```coffeescript
+```js
 urlb.queryParameters["someParameter"] = "newValue"
 ```
 
 ### Generate a new URL
 
-```coffeescript
+```js
 urlb.generateFullUrl() #=> "http://localhost:3000/?someParameter=newValue"
 ```
 
 ### Generate the path with query parameters
 
-```coffeescript
+```js
 urlb.pathWithQueryParameters #=> "/?someParameter=newValue"
 ```
